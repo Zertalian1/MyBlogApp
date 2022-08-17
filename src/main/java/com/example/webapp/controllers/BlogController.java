@@ -26,6 +26,7 @@ public class BlogController {
         return "blog_main";
     }
 
+
     // создание новой записи
     @PostMapping()
     public String makeCreate(@ModelAttribute("entry")Entry entry){
