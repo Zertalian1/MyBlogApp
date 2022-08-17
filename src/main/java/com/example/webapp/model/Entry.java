@@ -6,10 +6,11 @@ import javax.persistence.*;
 @Table(name = "entries")
 public class Entry {
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @SequenceGenerator(name = "entriesIdSeq", sequenceName = "entries_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator = "entriesIdSeq")
     private int id;
 
-    @Column
+    @Column(name = "title")
     private String title;
     @Column(name = "content")
     private String text;
@@ -28,6 +29,9 @@ public class Entry {
         return id;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getTitle() {
         return title;
@@ -43,9 +47,5 @@ public class Entry {
 
     public void setText(String text) {
         this.text = text;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 }

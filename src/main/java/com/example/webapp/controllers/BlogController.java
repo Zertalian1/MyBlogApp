@@ -1,8 +1,9 @@
 package com.example.webapp.controllers;
 
 
-import com.example.webapp.dao.EntryDAO;
+
 import com.example.webapp.model.Entry;
+import com.example.webapp.service.Impl.EntryServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,17 +12,17 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 @RequestMapping("/blog")
 public class BlogController {
-    EntryDAO entryDAO;
+    EntryServiceImpl service;
 
     @Autowired
-    public BlogController(EntryDAO entryDAO) {
-        this.entryDAO = entryDAO;
+    public BlogController(EntryServiceImpl service) {
+        this.service = service;
     }
 
     // все записи
     @GetMapping()
     public String getEntries(Model model){
-        model.addAttribute("entries", entryDAO.getAllEntry());
+        model.addAttribute("entries", service.getAllEntries());
         return "blog_main";
     }
 
@@ -29,14 +30,14 @@ public class BlogController {
     @PostMapping()
     public String makeCreate(@ModelAttribute("entry")Entry entry){
         System.out.println(entry.getId());
-        entryDAO.addNewEntry(entry);
+        service.addEntry(entry);
         return "redirect:/blog";
     }
 
     // конкретная запись
     @GetMapping("/{entryId}")
     public String getEntry(Model model, @PathVariable int entryId){
-        Entry entry = entryDAO.getEntryById(entryId);
+        Entry entry = service.getEntryById(entryId);
         model.addAttribute("entry", entry);
         return "blog_entry";
     }
@@ -44,7 +45,7 @@ public class BlogController {
     // получение формы на изменение
     @GetMapping("/{entryId}/edit")
     public String getUpdate(Model model, @PathVariable int entryId){
-        Entry entry = entryDAO.getEntryById(entryId);
+        Entry entry = service.getEntryById(entryId);
         model.addAttribute("entry", entry);
         return "edit_entry";
     }
@@ -52,15 +53,14 @@ public class BlogController {
     // запрос на изменение
     @PatchMapping("/{entryId}")
     public String makeUpdate(@ModelAttribute("entry")Entry entry, @PathVariable int entryId){
-        entry.setId(entryId);
-        entryDAO.updateEntry(entry);
+        service.updateEntry(entry, entryId);
         return "redirect:/blog/{entryId}";
     }
 
     // запрос на удаление
     @DeleteMapping("/{entryId}")
     public String makeDelete(@PathVariable int entryId){
-        entryDAO.deleteEntry(entryId);
+        service.deleteEntryById(entryId);
         return "redirect:/blog";
     }
 
