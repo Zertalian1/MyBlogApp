@@ -3,7 +3,7 @@ package com.example.webapp.service.Impl;
 import com.example.webapp.exception.EntryNotFoundException;
 import com.example.webapp.model.Entry;
 import com.example.webapp.repository.EntryRepository;
-import com.example.webapp.service.EntryService;
+import com.example.webapp.service.Interfaces.EntryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +13,6 @@ import java.util.List;
 public class EntryServiceImpl implements EntryService {
     EntryRepository entryRepository;
 
-    @Autowired
     public EntryServiceImpl(EntryRepository entryRepository) {
         this.entryRepository = entryRepository;
     }
@@ -40,7 +39,7 @@ public class EntryServiceImpl implements EntryService {
             entry.setText(newEntry.getText());
             entry.setTitle(newEntry.getTitle());
             return entryRepository.save(entry);
-        });
+        }).orElseThrow(()->new EntryNotFoundException(id));
     }
 
     @Override

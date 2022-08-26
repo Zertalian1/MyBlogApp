@@ -1,4 +1,4 @@
-package com.example.webapp.service;
+package com.example.webapp.service.Interfaces;
 
 import com.example.webapp.model.Entry;
 

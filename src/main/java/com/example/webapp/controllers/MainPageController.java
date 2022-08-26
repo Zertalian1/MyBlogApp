@@ -1,19 +1,41 @@
 package com.example.webapp.controllers;
 
+import com.example.webapp.model.User;
+import com.example.webapp.service.Impl.UserServiceImpl;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.Objects;
+import javax.sound.midi.Soundbank;
+import java.security.Principal;
+
 
 @Controller
 public class MainPageController {
+    UserServiceImpl userService;
+
+    public MainPageController(UserServiceImpl userService) {
+        this.userService = userService;
+    }
 
     @GetMapping("/")
-    public String home(@RequestParam(value = "name", required = false, defaultValue = "user" ) String name, Model model) {
-        model.addAttribute("name", name);
-        return "home";
+    public String home(Model model, Principal principal) {
+        if(principal!=null) {
+            User user = userService.findByUsername(principal.getName());
+            System.out.println(((Authentication)principal).getAuthorities());
+            model.addAttribute("user", user);
+        }
+        return "pages/home";
+    }
+
+    @GetMapping("/user")
+    public String userHomePage(){
+        System.out.println("Hi");
+        return "redirect:/blog";
     }
 
     @GetMapping("/Calculate")

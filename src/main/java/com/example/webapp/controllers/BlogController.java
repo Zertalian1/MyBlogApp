@@ -3,27 +3,34 @@ package com.example.webapp.controllers;
 
 
 import com.example.webapp.model.Entry;
+import com.example.webapp.model.User;
 import com.example.webapp.service.Impl.EntryServiceImpl;
+import com.example.webapp.service.Impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
+
 @Controller
 @RequestMapping("/blog")
 public class BlogController {
     EntryServiceImpl service;
+    UserServiceImpl userService;
 
     @Autowired
-    public BlogController(EntryServiceImpl service) {
+    public BlogController(EntryServiceImpl service, UserServiceImpl userService) {
         this.service = service;
+        this.userService = userService;
     }
 
     // все записи
     @GetMapping()
-    public String getEntries(Model model){
+    public String getEntries(Model model, Principal principal){
+        User user = userService.findByUsername(principal.getName());
         model.addAttribute("entries", service.getAllEntries());
-        return "blog_main";
+        return "pages/blog_main";
     }
 
 
@@ -40,7 +47,7 @@ public class BlogController {
     public String getEntry(Model model, @PathVariable int entryId){
         Entry entry = service.getEntryById(entryId);
         model.addAttribute("entry", entry);
-        return "blog_entry";
+        return "pages/blog_entry";
     }
 
     // получение формы на изменение
@@ -48,7 +55,7 @@ public class BlogController {
     public String getUpdate(Model model, @PathVariable int entryId){
         Entry entry = service.getEntryById(entryId);
         model.addAttribute("entry", entry);
-        return "edit_entry";
+        return "pages/edit_entry";
     }
 
     // запрос на изменение
@@ -67,6 +74,6 @@ public class BlogController {
 
     @GetMapping("/new")
     public String newPerson(@ModelAttribute("entry") Entry person){
-        return "new_entry";
+        return "pages/new_entry";
     }
 }
