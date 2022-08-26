@@ -1,0 +1,19 @@
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <title>Spring Boot User Authentication</title>
+</head>
+<body>
+<form th:action="@{/registration}" th:method="POST" th:object="${user}">
+    <lable>Nickname</lable>
+    <input type="text" id="nickname" name="nickname" th:field="*{nickname}">
+
+    <lable>Username</lable>
+    <input type="text" id="username" name="username" th:field="*{username}">
+
+    <lable>Password</lable>
+    <input type="password" id="password" name="password" th:field="*{password}">
+
+    <input type="submit">
+</form>
+</body>
+</html>
