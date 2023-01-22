@@ -64,6 +64,7 @@ public class BlogController {
         return "redirect:/blog";
     }
 
+    // создание новой записи
     @GetMapping("/new")
     public String newPerson(@ModelAttribute("entry") Entry person){
         return "new_entry";
